@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Letras de Músicas</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f5f5f5; margin:0; padding:20px; }
+    h1 { text-align:center; }
+    .music { background:#fff; padding:15px; margin:10px auto; max-width:600px; border-radius:8px; }
+    .admin { background:#e9e9e9; padding:15px; max-width:600px; margin:20px auto; border-radius:8px; }
+    textarea, input { width:100%; margin:5px 0; }
+    button { padding:10px; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<h1>Letras de Músicas</h1>
+
+<div id="musicList"></div>
+
+<div class="admin">
+  <h2>Área do Administrador</h2>
+  <input type="password" id="senha" placeholder="Senha do administrador" />
+  <input type="text" id="titulo" placeholder="Nome da música" />
+  <textarea id="letra" rows="6" placeholder="Letra da música"></textarea>
+  <button onclick="adicionarMusica()">Adicionar Música</button>
+</div>
+
+<script>
+  const SENHA_ADMIN = "1234"; // troque essa senha
+
+  let musicas = JSON.parse(localStorage.getItem("musicas")) || [];
+
+  function renderizar() {
+    const lista = document.getElementById("musicList");
+    lista.innerHTML = "";
+    musicas.forEach(m => {
+      const div = document.createElement("div");
+      div.className = "music";
+      div.innerHTML = `<h3>${m.titulo}</h3><pre>${m.letra}</pre>`;
+      lista.appendChild(div);
+    });
+  }
+
+  function adicionarMusica() {
+    const senha = document.getElementById("senha").value;
+    if (senha !== SENHA_ADMIN) {
+      alert("Senha incorreta");
+      return;
+    }
+    const titulo = document.getElementById("titulo").value;
+    const letra = document.getElementById("letra").value;
+    if (!titulo || !letra) return;
+
+    musicas.push({ titulo, letra });
+    localStorage.setItem("musicas", JSON.stringify(musicas));
+    renderizar();
+  }
+
+  renderizar();
+</script>
+
+</body>
+</html>
